@@ -6,19 +6,18 @@
 Are you a big fan of a content creator on Medium? Then **Medium Clapper** can be your best friend. This is a tool developed to make the clapping process easier for you. All you have to do is run the script, give them a few commands and let it do the rest for you!
 
 ## Contents
-- [Medium Clapper](#medium-clapper)
-  - [Contents](#contents)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Examples](#examples)
-  - [First time: What do I need to know?](#first-time-what-do-i-need-to-know)
-    - [How do we generate a new security key?](#how-do-we-generate-a-new-security-key)
-    - [Considerations](#considerations)
-  - [Roadmap](#roadmap)
-  - [Disclaimer](#disclaimer)
-  - [Donate](#donate)
-
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Examples](#examples)
+- [Exclude users](#exclude-users)
+- [First time: What do I need to know?](#first-time-what-do-i-need-to-know)
+  - [How do we generate a new security key?](#how-do-we-generate-a-new-security-key)
+  - [Considerations](#considerations)
+- [Roadmap](#roadmap)
+- [Disclaimer](#disclaimer)
+- [Donate](#donate)
+ 
 ## Requirements
 This tool uses Python, Playwright and a few more libraries to do its job. Below the list of dependencies you need to have installed in order to use it. Of course, in addition to these libs, you need `Python3` and `PIP` installed.
 
@@ -65,6 +64,17 @@ python3 medium_clapper.py -t @alefranzoni
 # changing claps and read time
 python3 medium_clapper.py -t @alefranzoni -c 10 -rt 3
 ```
+
+## Exclude users
+To exclude a user or a list of users, we have to edit the `./config/excluded` file and add one user per line. The correct format should be `<username,full_name>`. For example:
+
+```
+@someuser,Some User Full Name
+@anotheruser,Another Excluded Name
+```
+
+> Note that both the user and the full name **must be exactly** as given in Medium, as the check is case sensitive.
+
 
 ## First time: What do I need to know?
 As the tool stores cookies locally to save session data, thus avoiding having to log in to your account at each run, it is imperative that this data is protected from prying eyes. To achieve this, the data is encrypted with a unique, personal key. We only need to generate it for the **first and only time** and then save it, either in the default directory or in a secure location.
