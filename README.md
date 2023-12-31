@@ -94,7 +94,8 @@ python3 medium_clapper.py -t @alefranzoni -gk
 ## Roadmap
 What's the upcoming features that I have in mind?
 - [ ] Get the reading time (calculated by Medium) of each article.
-- [ ] Improve the clapping process by obtaining the number of claps given, this way if you have already given the maximum number of claps, do not waste time and continue with the next one.
+- [ ] Support for multi-target with one run
+- [x] Improve the clapping process by obtaining the number of claps given, this way if you have already given the maximum number of claps, do not waste time and continue with the next one.
 
 ## Disclaimer
 The use of this tool should not present any problems, however, it should be used at the **user's discretion**. The author assumes no liability for any claims, damages, or any other inconveniences that may occur.
