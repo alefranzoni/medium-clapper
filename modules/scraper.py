@@ -204,8 +204,34 @@ class Scraper:
         """Claps the current opened article."""
         header_clap_button = self.page.wait_for_selector("button[data-testid='headerClapButton']")
         header_clap_button.scroll_into_view_if_needed()
-        for _ in range(self.args.get(ArgumentOptions.CLAPS)):
+        header_clap_button.click()
+        remaining_claps = self._get_remaining_claps()
+        for _ in range(remaining_claps):
             header_clap_button.click()
+
+    def _get_claps_count(self):
+        """
+        Searches for a 'div' element with a specific animation style on the page. 
+        Returns the first matching 'div' or None if no match is found.
+        """
+        target_animation = 'animation: 400ms ease-out 500ms 1 normal none running k'
+        divs = self.page.query_selector_all("div")
+        for div in divs:
+            style = self.page.evaluate('(div) => div.getAttribute("style")', div)
+            if style and target_animation in style:
+                return int(div.text_content().replace("+", ""))
+        return None
+
+    def _get_remaining_claps(self):
+        """Calculates and returns the number of claps remaining to be given."""
+        claps_count = self._get_claps_count()
+        claps_to_give = self.args.get(ArgumentOptions.CLAPS) - 1
+        max_claps = 50
+        if not claps_count:
+            return claps_to_give
+        if claps_count == max_claps:
+            return 0
+        return min(claps_to_give, max_claps - claps_count)
 
     def _wait_reading_time(self):
         """
