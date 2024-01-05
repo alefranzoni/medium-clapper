@@ -18,6 +18,7 @@ def generate_security_key():
     """Generates the security key needed to encrypt and decrypt local files."""
     print("🔐 The new security key is being generated...")
     passkey = Fernet.generate_key()
+    os.makedirs('data', exist_ok=True)
     with open(KEY_PATH, 'wb') as file:
         file.write(passkey)
 
