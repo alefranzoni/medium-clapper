@@ -22,6 +22,8 @@ from modules.session_utils import add_cookies, save_cookies
 BASE_URL = "https://www.medium.com/{}"
 BASE_FEED_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/{}"
 BASE_POST_URL = "https://medium.com/{0}/{1}"
+NAME_PATTERN = r'<title>([^-]+) – Medium<'
+WRITTEN_BY_PATTERN = r'Written by <!--.*?-->(.*?)</span>'
 FEED_ARTICLES_PATTERN = (r'rel="noopener follow" href="/(@[^\?]+)\?source=collection_home-'
                          r'[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>'
                          r'[^>]+>[^>]+>[^>]+>[^>]+><a[^/]+([^\?]+)\?')
@@ -39,6 +41,7 @@ class Scraper:
         """Initialize the Scraper object."""
         print("🚀 The environment is getting ready...")
         self.args = arguments
+        self.logged_name = ''
         self.target = self.args.get(ArgumentOptions.TARGET)
         self.main_scroll_delay = self._get_main_scroll_delay()
         self.main_scroll_retries = self._get_main_scroll_retries()
@@ -59,9 +62,10 @@ class Scraper:
         self.context = self.browser.new_context()
         self.page = self.context.new_page()
         add_cookies(context=self.context)
+        self._login()
+        self._get_logged_name()
         print(f"🌎 Navigating to {self.target} Medium profile")
         self._navigate(BASE_URL.format(self.target))
-        self._login()
         self._check_for_new_articles()
         self._read_articles()
         self.close()
@@ -75,6 +79,12 @@ class Scraper:
         login_state = self._check_login_state()
         while login_state is False:
             login_state = self._check_login_state()
+
+    def _get_logged_name(self):
+        """Gets the full name of the logged user."""
+        self._navigate(BASE_URL.format('me'))
+        match = re.search(NAME_PATTERN, self.page.content())
+        self.logged_name = match.group(1).strip()
 
     def _check_login_state(self):
         """
@@ -202,12 +212,14 @@ class Scraper:
 
     def _clap(self):
         """Claps the current opened article."""
-        header_clap_button = self.page.wait_for_selector("button[data-testid='headerClapButton']")
-        header_clap_button.scroll_into_view_if_needed()
-        header_clap_button.click()
-        remaining_claps = self._get_remaining_claps()
-        for _ in range(remaining_claps):
+        written_by = re.search(WRITTEN_BY_PATTERN, self.page.content()).group(1).strip()
+        if written_by != self.logged_name:
+            header_clap_button = self.page.wait_for_selector("button[data-testid='headerClapButton']")
+            header_clap_button.scroll_into_view_if_needed()
             header_clap_button.click()
+            remaining_claps = self._get_remaining_claps()
+            for _ in range(remaining_claps):
+                header_clap_button.click()
 
     def _get_claps_count(self):
         """

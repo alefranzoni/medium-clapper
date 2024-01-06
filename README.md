@@ -8,18 +8,19 @@ Are you a big fan of a content creator on Medium? Then **Medium Clapper** can be
 ## Contents
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Usage](#usage)
-  - [Examples](#examples)
-- [Exclude users](#exclude-users)
 - [First time: What do I need to know?](#first-time-what-do-i-need-to-know)
   - [How do we generate a new security key?](#how-do-we-generate-a-new-security-key)
   - [Considerations](#considerations)
+- [Usage](#usage)
+  - [Options](#options)
+  - [Examples](#examples)
+- [Exclude users](#exclude-users)
 - [Roadmap](#roadmap)
 - [Disclaimer](#disclaimer)
 - [Donate](#donate)
  
 ## Requirements
-This tool uses Python, Playwright and a few more libraries to do its job. Below the list of dependencies you need to have installed in order to use it. Of course, in addition to these libs, you need `Python3` and `PIP` installed.
+This tool uses Python, Playwright and a few more libraries to do its job. Below the list of dependencies you need to have installed in order to use it. Of course, in addition to these libs, you need `Python3` ([How to install](https://www.python.org/downloads/)) and `PIP` installed.
 
 ```bash
 # playwright
@@ -37,14 +38,30 @@ Download this project manually or clone the repo with git
 ```bash
 git clone https://github.com/alefranzoni/medium-clapper.git
 ```
+## First time: What do I need to know?
+As the tool stores cookies locally to save session data, thus avoiding having to log in to your account at each run, it is imperative that this data is protected from prying eyes. To achieve this, the data is encrypted with a unique, personal key. We only need to generate it for the **first and only time** and then save it, either in the default directory or in a secure location.
+
+### How do we generate a new security key?
+To generate a new security key, it is as simple as running the script with the desired options and including the `-gk` argument. This will automatically generate your personal key and store it in the `./data` folder.
+
+```bash
+# example - generate new passkey
+python3 medium_clapper.py -t <username> -gk
+```
+
+### Considerations
+- If we move the security key to another place, before each execution we must place it in the `./data` folder.
+- If we lose the key, we can always generate a new one, but the session data previously protected with the old key will be lost.
 
 ## Usage
 After installing the dependencies, go to the project directory and run the `medium_clapper.py` with Python3
 
 ```bash
 cd medium-clapper
-python3 medium_clapper.py [-h] -t USER_ID [-sd SCROLL_DELAY] [-sr SCROLL_RETRIES] [-c CLAPS] [-rt READ_TIME] [-gk]
+python3 medium_clapper.py -t <username> [OPTIONS]
 ```
+### Options
+You can also customize the script execution by adding any (or all) of the following available commands.
 
 | Command     | Type  | Mandatory | Description                                                             |
 |-------------|-------|-----------|-------------------------------------------------------------------------|
@@ -54,6 +71,7 @@ python3 medium_clapper.py [-h] -t USER_ID [-sd SCROLL_DELAY] [-sr SCROLL_RETRIES
 |`-c`         |Int    | -         |Number of claps to give. Default: 50                                     |
 |`rt`         |Float  | -         |Time in seconds to wait in article to emulate reading time. Default is 10|
 |`-gk`        |Boolean| -         |Generate a new passkey to protect PII data                               |
+|`-h`        | - | -         |Show the help message                               |
 
 > Notice that the delay or retries options are similar and **do not** replace the default values, but are added to them. In slow connections, we can increase one or both of these values. Remember that setting very high values for either of these two options will cause the required processing times to be longer.
 
@@ -66,30 +84,18 @@ python3 medium_clapper.py -t @alefranzoni -c 10 -rt 3
 ```
 
 ## Exclude users
-To exclude a user or a list of users, we have to edit the `./config/excluded` file and add one user per line. The correct format should be `<username,full_name>`. For example:
+This option is intended for pages or profiles that republish other people's articles, such as the profile of a company that republishes articles written by its employees. 
+
+In such a case, if we do not wish to "clap" the articles of a certain user/s, we can exclude them in a very simple way from the 'clapping' process.
+
+To do that, we'll have to edit the `./config/excluded` file and add one user per line. The correct format should be `<username,full_name>`. For example:
 
 ```
 @someuser,Some User Full Name
-@anotheruser,Another Excluded Name
+@anotheruser,Another User Full Name
 ```
 
 > Note that both the user and the full name **must be exactly** as given in Medium, as the check is case sensitive.
-
-
-## First time: What do I need to know?
-As the tool stores cookies locally to save session data, thus avoiding having to log in to your account at each run, it is imperative that this data is protected from prying eyes. To achieve this, the data is encrypted with a unique, personal key. We only need to generate it for the **first and only time** and then save it, either in the default directory or in a secure location.
-
-### How do we generate a new security key?
-To generate a new security key, it is as simple as running the script with the desired options and including the `-gk` argument. This will automatically generate your personal key and store it in the `./data` folder.
-
-```bash
-# example - generate new passkey
-python3 medium_clapper.py -t @alefranzoni -gk
-```
-
-### Considerations
-- If we move the security key to another place, before each execution we must place it in the `./data` folder.
-- If we lose the key, we can always generate a new one, but the session data previously protected with the old key will be lost.
 
 ## Roadmap
 What's the upcoming features that I have in mind?
