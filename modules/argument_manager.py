@@ -22,7 +22,7 @@ class ArgumentManager():
     def _parse(self):
         """Get the command line arguments passed by the user at runtime."""
         parser = argparse.ArgumentParser()
-        parser.add_argument("-t", metavar="USER_ID", type=str, required=True, help="target username (including '@' if needed)")
+        parser.add_argument("-t", metavar="USERNAME", type=str, required=True, help="target username (including '@' if needed)")
         parser.add_argument("-sd", metavar="SCROLL_DELAY", type=float, default=.85, help="add a delay (in seconds) to the scrolling process. Default is 0.85")
         parser.add_argument("-sr", metavar="SCROLL_RETRIES", type=int, default=3, help="add attempts to the scrolling process. Default is 3")
         parser.add_argument("-c", metavar="CLAPS", type=int, default=50, help="number of claps to give on each article. Default is 50")
