@@ -46,8 +46,10 @@ To generate a new security key, it is as simple as running the script with the d
 
 ```bash
 # example - generate new passkey
-python3 medium_clapper.py -t <username> -gk
+python3 medium_clapper.py -t <target_username> -gk
 ```
+
+>⚠️ Note that **target_username** means the username to will clap his articles to.
 
 ### Considerations
 - If we move the security key to another place, before each execution we must place it in the `./data` folder.
@@ -58,7 +60,7 @@ After installing the dependencies, go to the project directory and run the `medi
 
 ```bash
 cd medium-clapper
-python3 medium_clapper.py -t <username> [OPTIONS]
+python3 medium_clapper.py -t <target_username> [OPTIONS]
 ```
 ### Options
 You can also customize the script execution by adding any (or all) of the following available commands.
@@ -84,9 +86,7 @@ python3 medium_clapper.py -t @alefranzoni -c 10 -rt 3
 ```
 
 ## Exclude users
-This option is intended for pages or profiles that republish other people's articles, such as the profile of a company that republishes articles written by its employees. 
-
-In such a case, if we do not wish to "clap" the articles of a certain user/s, we can exclude them in a very simple way from the 'clapping' process.
+This option is intended for pages or profiles that republish other people's articles. If you do not wish to "clap" the articles of a certain user/s, we can exclude them in a very simple way from the 'clapping' process.
 
 To do that, we'll have to edit the `./config/excluded` file and add one user per line. The correct format should be `<username,full_name>`. For example:
 
